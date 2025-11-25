@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Panchita la Pandita — PandaIDORgame</title>
+    <style>
+        :root {
+            --panel: rgba(226, 155, 172, 0.85);
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0
+        }
+
+        body {
+            font-family: system-ui, Segoe UI, Roboto, Arial;
+            color: #fff;
+            background: #111 url('panda-bg.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 30;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 999px;
+            padding: 8px 12px;
+            background: rgba(65, 64, 66, .9);
+            color: #fff;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: rgba(146, 76, 122, 0.486)
+        }
+
+        main {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 14vh 12px 24px 12px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: var(--panel);
+            color: #fff;
+            border-radius: 14px;
+            padding: 12px 14px;
+            width: 100%;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+        }
+
+        .stack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        select,
+        input,
+        button {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 0;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input,
+        select {
+            color: #222
+        }
+
+        .btn-dark {
+            background: #333;
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .btn-dark:hover {
+            background: #555
+        }
+
+        #log {
+            font-size: 12px;
+            color: #111;
+            background: #ffe7f1;
+            border-radius: 10px;
+            padding: 8px;
+            margin-top: 6px;
+            max-height: 160px;
+            overflow: auto;
+        }
+
+        .log-success {
+            background: #e8ffe8;
+            color: #083;
+            padding: 6px 8px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-weight: 700
+        }
+
+        .log-info {
+            background: #fff7d6;
+            color: #6a4a00;
+            padding: 6px 8px;
+            border-radius: 8px;
+            margin-bottom: 6px
+        }
+
+        #flagBox {
+            display: none;
+            text-align: center;
+            background: #e8ffe8;
+            color: #103d10;
+            border: 2px dashed #6ccc6c;
+            border-radius: 14px;
+            padding: 10px;
+            margin-top: 8px;
+            word-break: break-all;
+        }
+
+        .mini-label {
+            font-size: 13px;
+            color: #222;
+            font-weight: 700;
+            margin-bottom: 4px
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            z-index: 60;
+            background: rgba(0, 0, 0, .75);
+            align-items: stretch;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .overlay.open {
+            display: flex
+        }
+
+        .overlay-panel {
+            background: #fff;
+            color: #222;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 960px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+            overflow: hidden;
+        }
+
+        .overlay-header {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            background: #333;
+            color: #fff
+        }
+
+        .overlay-body {
+            padding: 12px;
+            overflow: auto;
+            flex: 1;
+            display: flex;
+            gap: 12px;
+            flex-direction: column
+        }
+
+        .overlay-footer {
+            padding: 12px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end
+        }
+
+        textarea.code {
+            width: 100%;
+            height: calc(100vh - 200px);
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 13px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 12px;
+            color: #111;
+            background: #fbfbfb
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <button class="btn" id="btnEnunciado">ℹ Enunciado</button>
+        <button class="btn" id="btnReset">↺ Reiniciar</button>
+    </div>
+
+    <main>
+        <div class="panel">
+            <h3>Panchita la pandita</h3>
+            <div><strong>Usuario actual:</strong> <span id="userName">Panchita la pandita</span></div>
+            <div><strong>Mis recursos:</strong> <span id="myBamboo">100</span> 🎋</div>
+        </div>
+
+        <div id="formContainer">
+            <div class="panel">
+                <h4>Enviar Bamboo</h4>
+                <form id="transferForm" onsubmit="return false;">
+                    <input type="hidden" name="from_id" value="0">
+                    <div class="stack">
+                        <label class="mini-label" for="friendSelect">Enviar a:</label>
+                        <select id="friendSelect" name="to_id">
+                            <option value="1">CocoPandita</option>
+                            <option value="2">LuliPandita</option>
+                            <option value="3">MaxiPandita</option>
+                        </select>
+                        <label class="mini-label" for="amount">Cantidad de Bamboo:</label>
+                        <input id="amount" name="amount" type="number" placeholder="Máximo 5 bamboo" />
+                        <button class="btn-dark" id="btnSend">Enviar</button>
+                        <div id="log" aria-live="polite"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h4>Recursos de otras Pandaldeas</h4>
+            <ul id="friendsList">
+                <li>CocoPandita tiene <span id="f1">70</span> 🎋</li>
+                <li>LuliPandita tiene <span id="f2">60</span> 🎋</li>
+                <li>MaxiPandita tiene <span id="f3">50</span> 🎋</li>
+            </ul>
+        </div>
+
+        <div class="panel">
+            <button class="btn-dark" id="openFormEditorBtn">📝 Abrir editor </button>
+
+            <div id="flagBox">
+                <h3>🎉 ¡Misión Cumplida! 🎉</h3>
+                <p>Lograste conseguir todo el bambú para Panchita. Pero al hacerlo, interceptaste una extraña secuencia
+                    de datos:</p>
+                <p><strong>Parece tener algún tipo de significado. Si descubres lo que representa, contacta a un
+                        organizador y muéstrale tu hallazgo.</strong></p>
+                <strong id="flag" style="font-family: monospace; font-size: 1.1em;"></strong>
+            </div>
+        </div>
+    </main>
+
+    <div class="overlay" id="modalEnunciado" style="display:none;align-items:center;justify-content:center;">
+        <div class="overlay-panel" style="max-width:720px;height:auto;min-height:220px;">
+            <div class="overlay-header"><strong>Enunciado del Desafío</strong></div>
+            <div class="overlay-body" style="flex:1">
+                <p>En este juego, tu personaje es <strong>Panchita la pandita</strong>, quien quiere mejorar su
+                    Pandaldea pero necesita <strong>280 de bambú</strong> para lograrlo. Lamentablemente, le resulta muy
+                    difícil juntar esa cantidad.</p>
+                <p>Solo se permite el envío de bamboo a otras Pandaldeas. </p>
+                <p>Sólo podras enviar 5 bamboo a cada Pandaldea. </p>
+                <p>Puedes enviar bamboo las veces que quieras a distintas Pandaldeas.</p>
+                <p>OBJETIVO: Ayudar a Panchita la pandita a obtener los 280 de bamboo necesarios explotando
+                    vulnerabilidades en el sistema de transferencias entre Pandaldeas..</p>
+            </div>
+            <div class="overlay-footer">
+                <button class="btn" id="closeEnunciado">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="formEditorOverlay" aria-hidden="true">
+        <div class="overlay-panel" role="dialog" aria-modal="true" aria-label="Editor de Formulario">
+            <div class="overlay-header">
+                <div style="flex:1"><strong>Editor de Formulario HTML</strong></div>
+                <button class="btn" id="closeFormEditor">Cerrar</button>
+            </div>
+            <div class="overlay-body">
+                <textarea id="formCodeArea" class="code" spellcheck="false"></textarea>
+            </div>
+            <div class="overlay-footer">
+                <button class="btn" id="applyHtmlChanges">Aplicar Cambios y Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ---------- Estado e inicialización ---------- */
+        let players, receivedOnce;
+        const logDiv = document.getElementById('log');
+
+        function resetGame() {
+            players = {
+                0: { name: "Panchita la pandita", bamboo: 100 },
+                1: { name: "CocoPandita", bamboo: 70 },
+                2: { name: "LuliPandita", bamboo: 60 },
+                3: { name: "MaxiPandita", bamboo: 50 },
+            };
+            receivedOnce = {};
+            docRefresh();
+            clearLog();
+            document.getElementById('flagBox').style.display = 'none';
+            document.getElementById('formContainer').innerHTML = initialFormHtml;
+            document.getElementById('btnSend').addEventListener('click', handleSend);
+        }
+
+        function docRefresh() {
+            document.getElementById('myBamboo').textContent = players[0].bamboo;
+            document.getElementById('f1').textContent = players[1].bamboo;
+            document.getElementById('f2').textContent = players[2].bamboo;
+            document.getElementById('f3').textContent = players[3].bamboo;
+        }
+        function clearLog() { logDiv.innerHTML = ''; }
+
+        /* ---------- Función "backend" (simulada) ---------- */
+        function apiTransfer(payload) {
+            const { from_id, to_id, amount } = payload;
+            const from = players[from_id];
+            const to = players[to_id];
+            if (!from || !to) {
+                appendLogInfo(`❌ Error: IDs inválidos.`);
+                return false;
+            }
+            if (!Number.isFinite(amount) || amount <= 0) {
+                appendLogInfo(`❌ Error: Monto inválido.`);
+                return false;
+            }
+            if (from.bamboo < amount) {
+                appendLogInfo(`❌ Error: ${from.name} no tiene suficiente bamboo.`);
+                return false;
+            }
+            from.bamboo -= amount;
+            to.bamboo += amount;
+            docRefresh();
+            checkWin();
+            return true;
+        }
+
+
+        const secretFlag = ["427567426f756e74794769726c73436c7562"];
+        function checkWin() {
+            if (players[0].bamboo === 280) {
+                document.getElementById('flagBox').style.display = 'block';
+                document.getElementById('flag').textContent = secretFlag.join(" ");
+            }
+        }
+
+        /* ---------- Helpers de UI para log ---------- */
+        function prependNode(node) { logDiv.prepend(node); }
+        function appendLogSuccess(text) {
+            const d = document.createElement('div'); d.className = 'log-success'; d.textContent = text; prependNode(d);
+        }
+        function appendLogInfo(text) {
+            const d = document.createElement('div'); d.className = 'log-info'; d.textContent = text; prependNode(d);
+        }
+
+        /* ---------- Lógica de Envío desde el Formulario (CON RESTRICCIONES) ---------- */
+        function handleSend() {
+            const form = document.getElementById('transferForm');
+            const from_id = parseInt(form.querySelector('input[name="from_id"]').value, 10);
+            const to_id = parseInt(form.querySelector('select[name="to_id"]').value, 10);
+            const amount = parseInt(form.querySelector('input[name="amount"]').value, 10);
+
+            if (isNaN(from_id) || isNaN(to_id) || isNaN(amount)) {
+                return alert("Datos del formulario inválidos. Revisa el código en el editor.");
+            }
+
+            if (from_id === 0) {
+                if (amount > 5) {
+                    return alert("Error: Desde la interfaz solo puedes enviar un máximo de 5 de bambú.");
+                }
+                if (receivedOnce[to_id]) {
+                    return alert("Error: Ya has enviado bambú a este panda. Solo puedes hacerlo una vez.");
+                }
+
+                const success = apiTransfer({ from_id, to_id, amount });
+
+                if (success) {
+                    receivedOnce[to_id] = true;
+                    const destName = players[to_id] ? players[to_id].name : "un panda desconocido";
+                    appendLogSuccess(`✅ Enviaste ${amount} de bambú a ${destName}.`);
+                }
+                return;
+            }
+
+            apiTransfer({ from_id, to_id, amount });
+        }
+        document.getElementById('btnSend').addEventListener('click', handleSend);
+
+        /* ---------- Lógica para el Editor de Formulario HTML ---------- */
+        const formEditorOverlay = document.getElementById('formEditorOverlay');
+        const formCodeArea = document.getElementById('formCodeArea');
+        const formContainer = document.getElementById('formContainer');
+        const initialFormHtml = formContainer.innerHTML;
+
+        document.getElementById('openFormEditorBtn').addEventListener('click', () => {
+            formCodeArea.value = formContainer.innerHTML.trim();
+            formEditorOverlay.classList.add('open');
+        });
+        document.getElementById('closeFormEditor').addEventListener('click', () => {
+            formEditorOverlay.classList.remove('open');
+        });
+        document.getElementById('applyHtmlChanges').addEventListener('click', () => {
+            formContainer.innerHTML = formCodeArea.value;
+            const newSendButton = document.getElementById('btnSend');
+            if (newSendButton) { newSendButton.addEventListener('click', handleSend); }
+            formEditorOverlay.classList.remove('open');
+        });
+
+        /* ---------- Enunciado modal y reinicio ---------- */
+        const modalEnunciado = document.getElementById('modalEnunciado');
+        document.getElementById('btnEnunciado').addEventListener('click', () => { modalEnunciado.style.display = 'flex'; });
+        document.getElementById('closeEnunciado').addEventListener('click', () => { modalEnunciado.style.display = 'none'; });
+        document.getElementById('btnReset').addEventListener('click', resetGame);
+
+        // Inicializar juego
+        resetGame();
+    </script>
+</body>
+
+</html>
