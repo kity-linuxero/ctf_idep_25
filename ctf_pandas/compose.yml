@@ -1,0 +1,17 @@
+services:
+  ctf_pandas:
+    build: .
+#    ports:
+#      - "8080:8080"
+    expose:
+      - 8080
+    volumes:
+      - ./ctf2.html:/app/ctf2.html
+
+    networks:
+      - dmz_web_apps
+    restart: always
+
+networks:
+  dmz_web_apps:
+    external: true

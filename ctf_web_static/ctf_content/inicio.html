@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,18 +11,16 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-
         /* Oculta la pista por defecto */
         .hidden {
             display: none;
         }
     </style>
 </head>
-
 <body class="bg-gray-900 text-gray-200 min-h-screen flex items-center justify-center p-6">
 
     <div class="container max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg text-center">
-
+        
         <!-- Contenido Visible -->
         <h1 class="text-4xl font-bold text-cyan-400 mb-6">
             ¡Bienvenidx al CTF de IDEP Informáticos!
@@ -33,24 +30,24 @@
         <p class="text-xl text-gray-300 mb-4">
             "A veces, la respuesta está a simple vista"
         </p>
-
+        
         <!-- Área Interactiva con la imagen -->
         <div class="my-8">
             <!-- 
-              Aquí puedes cambiar el 'src' por la URL de tu imagen.
-              He usado un placeholder que coincide con el tema.
+              Imágen de IDEP Informáticxs
+              Placeholder
             -->
-            <img id="trigger-image" src="https://docker.idepba.com.ar/img/logos/IDEPInformaticaLogo.png"
-                alt="Una imagen misteriosa"
-                class="mx-auto rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
-                title="Haz doble clic para revelar un secreto">
-
+            <img id="trigger-image" 
+                 src="https://docker.idepba.com.ar/img/logos/IDEPInformaticaLogo.png" 
+                 alt="Una imagen misteriosa" 
+                 class="mx-auto rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+                 title="Haz doble clic para revelar un secreto">
+            
             <p class="text-sm text-gray-500 mt-2">(Esto no es parte del flag... ¿O sí?...)</p>
         </div>
 
         <!-- La Pista Oculta (Texto cambiado y oculta por defecto) -->
-        <div id="hidden-pista"
-            class="hidden bg-gray-700 p-4 rounded-md border border-yellow-500 transition-all duration-500">
+        <div id="hidden-pista" class="hidden bg-gray-700 p-4 rounded-md border border-yellow-500 transition-all duration-500">
             <p class="text-lg italic text-yellow-300 font-mono">
                 "La documentación puede mentir, pero el código siempre dice la verdad."
             </p>
@@ -63,7 +60,7 @@
     
     Aquí tienes tu recompensa:
     
-    flag:{añlfñlakfdñlkasñdlkf}
+    flag:{ATE_h4ck_th3_PBA}
     
     ¡Sigue así!
     -->
@@ -71,16 +68,16 @@
     <script>
         // Esperamos a que el DOM esté cargado
         document.addEventListener('DOMContentLoaded', () => {
-
+            
             // Obtenemos la imagen por su ID
             const triggerImage = document.getElementById('trigger-image');
-
+            
             // Obtenemos la pista oculta por su ID
             const pistaOculta = document.getElementById('hidden-pista');
 
             if (triggerImage && pistaOculta) {
-                // Agregamos el listener para el evento 'dblclick' (doble clic)
-                triggerImage.addEventListener('dblclick', () => {
+                // Agregamos el listener para el evento 'click' (clic)
+                triggerImage.addEventListener('click', () => {
                     // Quitamos la clase 'hidden' para mostrar la pista
                     pistaOculta.classList.remove('hidden');
                 });
@@ -89,5 +86,4 @@
     </script>
 
 </body>
-
 </html>

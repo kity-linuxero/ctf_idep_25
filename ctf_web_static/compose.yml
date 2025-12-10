@@ -1,0 +1,16 @@
+services:
+  ctf:
+    container_name: ctf_content
+    restart: always
+    image: nginx
+#    ports:
+#      - "8003:80"
+#    expose: 
+    volumes:
+      - ./ctf_content:/usr/share/nginx/html
+    networks:
+      - dmz_web_apps
+
+networks:
+  dmz_web_apps:
+    external: true
