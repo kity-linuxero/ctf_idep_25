@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Generador CTF TP-Link</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #222;
+            color: #0f0;
+        }
+
+        input,
+        button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .result {
+            background: #333;
+            padding: 15px;
+            margin-top: 20px;
+            word-break: break-all;
+            border: 1px solid #555;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Herramienta de Configuración CTF</h2>
+
+    <label>Password Correcto (ej: admin)</label>
+    <input type="text" id="pass" value="admin">
+
+    <label>Flag (Mensaje secreto)</label>
+    <input type="text" id="flag" value="CTF{tp_l1nk_d3f4ult_p4ss_rul3z}">
+
+    <button onclick="generar()">GENERAR CÓDIGOS</button>
+
+    <div id="output" class="result" style="display:none;"></div>
+
+    <script>
+        async function generar() {
+            const password = document.getElementById('pass').value;
+            const flag = document.getElementById('flag').value;
+
+            // 1. Preparar Password (SHA-256)
+            const enc = new TextEncoder();
+            const keyMaterial = await crypto.subtle.digest('SHA-256', enc.encode(password));
+            const key = await crypto.subtle.importKey(
+                "raw", keyMaterial, { name: "AES-GCM" }, false, ["encrypt"]
+            );
+
+            // 2. Generar IV aleatorio (12 bytes es estándar para GCM)
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+
+            // 3. Cifrar la Flag
+            const encryptedBuffer = await crypto.subtle.encrypt(
+                { name: "AES-GCM", iv: iv },
+                key,
+                enc.encode(flag)
+            );
+
+            // 4. Convertir a Hex Strings
+            const ivHex = [...iv].map(b => b.toString(16).padStart(2, '0')).join('');
+            const encryptedHex = [...new Uint8Array(encryptedBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+
+            // 5. Mostrar resultado para copiar
+            const output = document.getElementById('output');
+            output.style.display = 'block';
+            output.innerHTML = `
+                <strong>¡Copia y reemplaza estas dos líneas en tu index.html!</strong><br><br>
+                const ivHex = "${ivHex}";<br>
+                const encryptedFlagHex = "${encryptedHex}";
+            `;
+        }
+    </script>
+</body>
+
+</html>
