@@ -27,7 +27,7 @@ Explora los directorios para encontrar retos que involucran:
 Este proyecto es fruto del esfuerzo colaborativo y la inspiración de la comunidad:
 
 ### 🐼 CTF Panchita
-> *Idea original de **@BugBuntyGirls** presentada en la **Ekoparty 2025**.*
+> *Idea original de **@BugBountyGirls** presentada en la **Ekoparty 2025**.*
 > Inspirado en [pandaidorgame.netlify.app](https://pandaidorgame.netlify.app/)
 
 ### 💻 CTF IDEP Web
